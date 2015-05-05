@@ -1,0 +1,226 @@
+import java.awt.event.*; 
+import java.awt.*; 
+import java.io.*; 
+import java.lang.String; 
+class jsb implements ActionListener 
+{ 
+Dialog bb; 
+String strt; 
+int i; 
+FileDialog fd; 
+File file; 
+public Frame f; 
+public TextArea p1; 
+public MenuBar menubar; 
+public Menu menu1,menu2,menu3; 
+public MenuItem item1,item2,item3,item4,item5,item6,item7,item8,item9,item10; 
+ jsb(String s) 
+{ i=0; 
+f=new Frame(s); 
+p1=new TextArea(""); 
+f.setSize(500,500); 
+f.setBackground(Color.white); 
+f.setVisible(true); 
+menubar=new MenuBar(); 
+menu1=new Menu("文件"); 
+menu2=new Menu("编辑"); 
+menu3=new Menu("帮助"); 
+item1=new MenuItem("新建"); 
+item2=new MenuItem("打开"); 
+item3=new MenuItem("保存"); 
+item4=new MenuItem("另存为"); 
+item5=new MenuItem("退出"); 
+item6=new MenuItem("全选"); 
+item7=new MenuItem("复制"); 
+item8=new MenuItem("剪切"); 
+item9=new MenuItem("粘贴"); 
+item10=new MenuItem("关于"); 
+f.addWindowListener(new WindowAdapter() 
+{ 
+public void windowClosing(WindowEvent e) 
+{f.setVisible(false);System.exit(0);} 
+}); 
+menu1.add(item1); 
+menu1.add(item2); 
+menu1.add(item3); 
+menu1.add(item4); 
+menu1.add(item5); 
+menu2.add(item6); 
+menu2.add(item7); 
+menu2.add(item8); 
+menu2.add(item9); 
+menu3.add(item10); 
+menubar.add(menu1); 
+menubar.add(menu2); 
+menubar.add(menu3); 
+f.setMenuBar(menubar); 
+item1.addActionListener(this); 
+item2.addActionListener(this); 
+item3.addActionListener(this); 
+item4.addActionListener(this); 
+item5.addActionListener(this); 
+item6.addActionListener(this); 
+item7.addActionListener(this); 
+item8.addActionListener(this); 
+item9.addActionListener(this); 
+item10.addActionListener(this); 
+f.setLayout(new GridLayout(1,1)); 
+f.add(p1);f.pack(); 
+} 
+public void actionPerformed(ActionEvent e) 
+{ 
+String ss; 
+ss=p1.getText().trim(); 
+if (e.getSource()==item5)
+{ 
+if (i==0 &&(ss.length()!=0))
+{ 
+bc(); 
+} 
+else 
+{ 
+System.exit(0); 
+} 
+} 
+if (e.getSource()==item1) 
+{ 
+if (i==0&&(ss.length()!=0))
+{ 
+bc(); 
+} 
+else 
+{ 
+p1.setText("");i=0;f.setTitle("文件对话框"); 
+} 
+} 
+if (e.getSource()==item2)
+{ 
+fd=new FileDialog(f,"打开文件",0);
+fd.setVisible(true); 
+try{ 
+file=new File(fd.getDirectory(),fd.getFile()); 
+f.setTitle(fd.getFile()+"文件对话框"); 
+FileReader fr=new FileReader(file);
+BufferedReader br=new BufferedReader(fr); 
+String line = null; 
+String view = ""; 
+while((line=br.readLine())!=null) 
+{ 
+view += line+"\n"; 
+} 
+p1.setText(view); 
+br.close(); 
+fr.close(); 
+} 
+catch(IOException expIn) 
+{} 
+} 
+if (e.getSource()==item3)
+{ 
+if (i==0) 
+{ 
+bc(); 
+} 
+else 
+{ 
+try{ 
+file=new File(fd.getDirectory(),fd.getFile()); 
+f.setTitle(fd.getFile()+"--记事本"); 
+
+FileWriter fw=new FileWriter(file);
+BufferedWriter bw=new BufferedWriter(fw); 
+String s =p1.getText(); 
+s = s.replaceAll("\n","\r\n"); 
+bw.write(s); 
+bw.flush(); 
+bw.close();
+fw.close(); 
+i=1; 
+} 
+catch(IOException expOut){i=0;} 
+} 
+} 
+
+if (e.getSource()==item4)
+{ 
+bc(); 
+} 
+if (e.getSource()==item10)
+{ 
+bb=new Dialog(f,"关于"); 
+Label l1=new Label("本记事本的完成感谢老师和同学的帮助！！"); 
+bb.add(l1); 
+bb.setSize(250,150); 
+bb.setBackground(Color.white); 
+bb.show(); 
+bb.addWindowListener(new WindowAdapter() 
+{ 
+public void windowClosing(WindowEvent e) 
+{bb.setVisible(false);bb.dispose();} 
+}); 
+
+} 
+if (e.getSource()==item6)
+{ 
+p1.setSelectionStart(0); 
+p1.setSelectionEnd(p1.getText().length()); 
+
+} 
+if (e.getSource()==item7)
+{ 
+try{ 
+String str=p1.getSelectedText(); 
+if(str.length()!=0) 
+{ 
+strt=str; 
+} 
+}catch(Exception ex) 
+{ 
+} 
+
+} 
+if (e.getSource()==item8)
+{ 
+try{ 
+String str=p1.getSelectedText(); 
+if(str.length()!=0) 
+{ 
+p1.replaceRange("",p1.getSelectionStart(),p1.getSelectionEnd()); 
+} 
+} 
+catch(Exception ex) 
+{ 
+} 
+} 
+if (e.getSource()==item9)
+{ 
+if(strt.length()>0) 
+{ 
+p1.insert(strt,p1.getCaretPosition()); 
+} 
+} 
+} 
+public void bc()
+{ 
+fd=new FileDialog(f,"保存文件",1);
+fd.setVisible(true); 
+try{ 
+file=new File(fd.getDirectory(),fd.getFile()); 
+f.setTitle(fd.getFile()+"--记事本"); 
+FileWriter fw=new FileWriter(file);
+BufferedWriter bw=new BufferedWriter(fw); 
+String s =p1.getText(); 
+s = s.replaceAll("\n","\r\n"); 
+bw.write(s); 
+bw.flush(); 
+bw.close();
+fw.close(); 
+i=1; 
+} 
+catch(IOException expOut){}
+} 
+} 
+public class keshe 
+{ public static void main(String args[]) 
+{jsb dd=new jsb("我的记事本");} 
+}  
